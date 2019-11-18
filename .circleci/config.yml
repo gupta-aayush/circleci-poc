@@ -11,14 +11,6 @@ jobs:
       - checkout
       - run: ls -lah
       - run: npm install
-
-  deploy:
-    docker:
-          - image: 455589372314.dkr.ecr.eu-central-1.amazonaws.com/omnia-srv-base:0.0.2
-            aws_auth:
-              aws_access_key_id: $AWS_SANDBOX_USERNAME  # can specify string literal values
-              aws_secret_access_key: $AWS_SANDBOX_PASSWORD  # or project UI envar reference
-    steps:
       - run: aws --version
       - run: aws s3 sync . s3://octopus-test
 
@@ -26,6 +18,3 @@ workflows:
   commit:
     jobs:
       - build
-      - deploy:
-          requires:
-            - build
