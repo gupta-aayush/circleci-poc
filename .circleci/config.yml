@@ -19,7 +19,7 @@ jobs:
               aws_access_key_id: $AWS_SANDBOX_USERNAME  # can specify string literal values
               aws_secret_access_key: $AWS_SANDBOX_PASSWORD  # or project UI envar reference
     steps:
-      - run: aws --verison
+      - run: aws --version
       - run: aws s3 sync . s3://octopus-test
 
 workflows:
