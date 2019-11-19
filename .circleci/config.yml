@@ -8,18 +8,15 @@ executors:
            aws_secret_access_key: $AWS_SANDBOX_PASSWORD  # or project UI envar reference
 
 jobs:
-  build:
+  build_and_pushing_artifacts:
     executor: dev-executor
     working_directory: ~/basecode
     steps:
       - checkout
       - run: npm install
       - run: zip -r omnia-sample.1.0.$CIRCLE_BUILD_NUM.zip ./*
-
-  pushing_artifacts:
-    executor: dev-executor
-    working_directory: ~/basecode
-    steps:
+      - run: ls -lah
+      - run: pwd
       - run:
          name: Install jFrog CLI
          command: curl -fL https://getcli.jfrog.io | sh
@@ -35,6 +32,8 @@ jobs:
     executor: dev-executor
     working_directory: ~/basecode
     steps:
+      - run: ls -lah
+      - run: pwd
       - run: aws s3 sync . s3://octopus-test
 
   deploy_stage:
@@ -47,19 +46,16 @@ jobs:
     executor: dev-executor
     working_directory: ~/basecode
     steps:
-      - run: echo "STAGE"
+      - run: echo "PROD"
 
 workflows:
   version: 2
   build-publish-and-approval-deploy:
     jobs:
-      - build
-      - pushing_artifacts:
-          requires:
-            - build
+      - build_and_pushing_artifacts
       - deploy_dev:
           requires:
-            - build
+            - build_and_pushing_artifacts
       - hold:
           type: approval
           requires:
@@ -67,6 +63,6 @@ workflows:
       - deploy_stage:
           requires:
             - hold
-      - deploy_stage:
+      - deploy_prod:
           requires:
             - deploy_stage
