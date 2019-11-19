@@ -22,7 +22,7 @@ jobs:
          name: Push to Artifactory
          command: |
            ./jfrog rt config --url $ARTIFACTORY_URL --user $ARTIFACTORY_USER --apikey $ARTIFACTORY_APIKEY --interactive=false
-           ./jfrog rt u omnia-sample.1.0.$CIRCLE_BUILD_NUM.zip artifactory-build-info --build-name=omnia-sample.1.0.$CIRCLE_BUILD_NUM.zip --build-number=$CIRCLE_BUILD_NUM
+           ./jfrog rt u omnia-sample.1.0.$CIRCLE_BUILD_NUM.zip generic-local/sample/ --build-name=omnia-sample.1.0.$CIRCLE_BUILD_NUM.zip --build-number=$CIRCLE_BUILD_NUM
            ./jfrog rt bce omnia-sample.1.0.$CIRCLE_BUILD_NUM.zip $CIRCLE_BUILD_NUM  # collects all environment variables on the agent
            ./jfrog rt bp omnia-sample.1.0.$CIRCLE_BUILD_NUM.zip $CIRCLE_BUILD_NUM  # attaches ^^ to the build in artifactory
 
